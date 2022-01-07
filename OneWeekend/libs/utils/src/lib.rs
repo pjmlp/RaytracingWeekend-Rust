@@ -2,11 +2,21 @@ use glam::DVec3;
 use std::io::{Stdout, Write};
 use std::io::Error;
 
+// republish the internal modules
 mod algebra;
 pub use algebra::*;
 
 mod ray;
 pub use ray::*;
+
+mod sphere;
+pub use sphere::*;
+
+mod hitable;
+pub use hitable::*;
+
+
+// remaining crate code
 
 pub fn write_color(out : Stdout, pixel_color : DVec3) -> Result<(), Error>  {
     let ir = (255.999 * pixel_color.x) as i64;
