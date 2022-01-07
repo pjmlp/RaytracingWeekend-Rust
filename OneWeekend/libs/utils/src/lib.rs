@@ -1,3 +1,4 @@
+use std::rc::Rc;
 use glam::DVec3;
 use std::io::{Stdout, Write};
 use std::io::Error;
@@ -52,4 +53,43 @@ pub fn ray_color(r: Ray) -> Color {
     let unit_direction = unit_vector(r.direction());
     let t = 0.5*(unit_direction.y + 1.0);
     (1.0-t)*glam::dvec3(1.0, 1.0, 1.0) + t*glam::dvec3(0.5, 0.7, 1.0)
+}
+
+
+pub struct HitableList {
+    objects : Vec<Rc<dyn Hitable>>
+}
+
+impl HitableList {
+    pub fn new() -> Self {
+        HitableList { objects: Vec::new() }
+    }
+
+
+    pub fn copy_from(other:Vec<Rc<dyn Hitable>>) -> Self {
+        HitableList { objects: other }
+    }
+
+    pub fn clear(mut self) {
+        self.objects.clear();
+    }
+}
+
+impl Hitable for HitableList {
+    #[allow(unused_parens)]   
+    fn hit(&self, ray: &Ray, t_min:f64, t_max:f64, rec : &mut HitRecord) -> bool {
+        let mut temp_rec = HitRecord::default();
+        let mut closest_so_far = t_max;
+        let mut hit_anything = false;
+
+        for object in &self.objects {
+            if (object.hit(ray, t_min, closest_so_far, &mut temp_rec)) {
+                hit_anything = true;
+                closest_so_far = temp_rec.t;
+                *rec = temp_rec;
+            }
+        }
+
+        hit_anything
+    }
 }
