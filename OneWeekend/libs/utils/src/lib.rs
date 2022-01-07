@@ -16,15 +16,27 @@ pub use sphere::*;
 mod hitable;
 pub use hitable::*;
 
+mod camera;
+pub use camera::*;
 
 // remaining crate code
 
-pub fn write_color(out : Stdout, pixel_color : DVec3) -> Result<(), Error>  {
-    let ir = (255.999 * pixel_color.x) as i64;
-    let ig = (255.999 * pixel_color.y) as i64;
-    let ib = (255.999 * pixel_color.z) as i64;
+pub fn write_color(out : Stdout, pixel_color : DVec3, samples_per_pixel:i32) -> Result<(), Error>  {
+    let mut r = pixel_color.x;
+    let mut g = pixel_color.y;
+    let mut b = pixel_color.z;
+
+// Divide the color by the number of samples.
+    let scale = 1.0 / (samples_per_pixel as f64);
+    r *= scale;
+    g *= scale;
+    b *= scale;
 
     let mut handle = out.lock();
+
+    let ir = (256.0 * r.clamp(0.0, 0.999)) as i64;
+    let ig = (256.0 * g.clamp(0.0, 0.999)) as i64;
+    let ib = (256.0 * b.clamp(0.0, 0.999)) as i64;
 
     handle.write_fmt(format_args!("{} {} {}\n", ir, ig, ib))?;
 
@@ -98,4 +110,14 @@ impl Hitable for HitableList {
 
         hit_anything
     }
+}
+
+pub fn random_double() -> f64 {
+    // Returns a random real in [0,1).
+    rand::random::<f64>()
+}
+
+pub fn random_double_with(min: f64, max: f64) -> f64 {
+    // Returns a random real in [min,max).
+    min + (max-min)*random_double()
 }

@@ -7,6 +7,7 @@ fn main() {
     const ASPECT_RATIO : f32 = 16.0 / 9.0;
     const IMAGE_WIDTH : i32 = 400;
     const IMAGE_HEIGHT : i32 = (IMAGE_WIDTH as f32 / ASPECT_RATIO) as i32;
+    const SAMPLES_PER_PIXEL : i32 = 100;
 
     // World
     let mut world = HitableList::new();
@@ -37,7 +38,7 @@ fn main() {
             let r = utils::Ray::new(origin, lower_left_corner + u * horizontal + v * vertical - origin);
             let pixel_color = utils::ray_color(r, &world);
 
-            utils::write_color(std::io::stdout(), pixel_color).expect("Failed ot write pixel");
+            utils::write_color(std::io::stdout(), pixel_color, SAMPLES_PER_PIXEL).expect("Failed ot write pixel");
         }
     }
 
