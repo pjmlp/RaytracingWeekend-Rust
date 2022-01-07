@@ -44,15 +44,17 @@ pub fn hit_sphere(center : DVec3, radius: f64, r : &Ray) -> f64 {
     }
 }
 
-pub fn ray_color(r: Ray) -> Color {
-    let t = hit_sphere(glam::dvec3(0.0, 0.0, -1.0), 0.5, &r);
-    if  t > 0.0 {
-        let n = unit_vector(r.at(t) - glam::dvec3(0.0, 0.0, -1.0));
-        return 0.5 * Color::new(n.x + 1.0, n.y + 1.0, n.z + 1.0)
+pub fn ray_color(r: Ray, world : &dyn Hitable) -> Color {
+    let mut rec = HitRecord::default();
+
+    if world.hit(&r, 0.0, f64::INFINITY, &mut rec) {
+        return 0.5 * (rec.normal + Color::new(1.0,1.0,1.0));
     }
+    
     let unit_direction = unit_vector(r.direction());
     let t = 0.5*(unit_direction.y + 1.0);
-    (1.0-t)*glam::dvec3(1.0, 1.0, 1.0) + t*glam::dvec3(0.5, 0.7, 1.0)
+    
+    (1.0-t)*Color::new(1.0, 1.0, 1.0) + t*Color::new(0.5, 0.7, 1.0)
 }
 
 
@@ -73,17 +75,21 @@ impl HitableList {
     pub fn clear(mut self) {
         self.objects.clear();
     }
+    
+    pub fn add(&mut self, obj:Rc<dyn Hitable>) {
+        self.objects.push(obj)
+    }    
 }
 
 impl Hitable for HitableList {
-    #[allow(unused_parens)]   
+ 
     fn hit(&self, ray: &Ray, t_min:f64, t_max:f64, rec : &mut HitRecord) -> bool {
         let mut temp_rec = HitRecord::default();
         let mut closest_so_far = t_max;
         let mut hit_anything = false;
 
         for object in &self.objects {
-            if (object.hit(ray, t_min, closest_so_far, &mut temp_rec)) {
+            if object.hit(ray, t_min, closest_so_far, &mut temp_rec) {
                 hit_anything = true;
                 closest_so_far = temp_rec.t;
                 *rec = temp_rec;
