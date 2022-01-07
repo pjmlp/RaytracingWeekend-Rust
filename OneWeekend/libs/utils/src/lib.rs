@@ -56,11 +56,17 @@ pub fn hit_sphere(center : DVec3, radius: f64, r : &Ray) -> f64 {
     }
 }
 
-pub fn ray_color(r: Ray, world : &dyn Hitable) -> Color {
+pub fn ray_color(r: Ray, world : &dyn Hitable, depth: i32) -> Color {
     let mut rec = HitRecord::default();
 
+    // If we've exceeded the ray bounce limit, no more light is gathered.
+    if depth <= 0 {
+        return Color::new(0.0, 0.0, 0.0);
+    }
+
     if world.hit(&r, 0.0, f64::INFINITY, &mut rec) {
-        return 0.5 * (rec.normal + Color::new(1.0,1.0,1.0));
+        let target = rec.p + rec.normal + random_in_unit_sphere();
+        return 0.5 * ray_color(Ray::new(rec.p, target - rec.p), world, depth - 1);
     }
     
     let unit_direction = unit_vector(r.direction());
@@ -68,7 +74,6 @@ pub fn ray_color(r: Ray, world : &dyn Hitable) -> Color {
     
     (1.0-t)*Color::new(1.0, 1.0, 1.0) + t*Color::new(0.5, 0.7, 1.0)
 }
-
 
 pub struct HitableList {
     objects : Vec<Rc<dyn Hitable>>
@@ -120,4 +125,26 @@ pub fn random_double() -> f64 {
 pub fn random_double_with(min: f64, max: f64) -> f64 {
     // Returns a random real in [min,max).
     min + (max-min)*random_double()
+}
+
+pub fn random_dvec3() -> DVec3 {
+    // Returns a random vector in [0,1).
+    DVec3::new(rand::random::<f64>(), rand::random::<f64>(), rand::random::<f64>())
+}
+
+pub fn random_dvec3_with(min: f64, max: f64) -> DVec3 {
+    // Returns a random vector in [min,max).
+    DVec3::new(random_double_with(min, max), random_double_with(min, max), random_double_with(min, max))
+}
+
+pub fn random_in_unit_sphere() -> DVec3 {
+    // Returns a random vector in [0,1).
+    loop {
+        let p = random_dvec3();
+        if p.length_squared() >= 1.0 {
+            continue;
+        }
+
+        return p;
+    }    
 }
