@@ -1,7 +1,5 @@
 use std::rc::Rc;
 use glam::DVec3;
-use std::io::{Stdout, Write};
-use std::io::Error;
 
 // republish the internal modules
 mod algebra;
@@ -19,29 +17,10 @@ pub use hitable::*;
 mod camera;
 pub use camera::*;
 
+mod color;
+pub use color::*;
+
 // remaining crate code
-
-pub fn write_color(out : Stdout, pixel_color : DVec3, samples_per_pixel:i32) -> Result<(), Error>  {
-    let mut r = pixel_color.x;
-    let mut g = pixel_color.y;
-    let mut b = pixel_color.z;
-
-// Divide the color by the number of samples.
-    let scale = 1.0 / (samples_per_pixel as f64);
-    r *= scale;
-    g *= scale;
-    b *= scale;
-
-    let mut handle = out.lock();
-
-    let ir = (256.0 * r.clamp(0.0, 0.999)) as i64;
-    let ig = (256.0 * g.clamp(0.0, 0.999)) as i64;
-    let ib = (256.0 * b.clamp(0.0, 0.999)) as i64;
-
-    handle.write_fmt(format_args!("{} {} {}\n", ir, ig, ib))?;
-
-    Ok(())
-}
 
 pub fn hit_sphere(center : DVec3, radius: f64, r : &Ray) -> f64 {
     let oc = r.origin() - center;
