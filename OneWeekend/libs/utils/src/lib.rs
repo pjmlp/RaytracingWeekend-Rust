@@ -44,7 +44,7 @@ pub fn ray_color(r: Ray, world : &dyn Hitable, depth: i32) -> Color {
     }
 
     if world.hit(&r, 0.0, f64::INFINITY, &mut rec) {
-        let target = rec.p + rec.normal + random_in_unit_sphere();
+        let target = rec.p + rec.normal + random_unit_vector();
         return 0.5 * ray_color(Ray::new(rec.p, target - rec.p), world, depth - 1);
     }
     
@@ -126,4 +126,8 @@ pub fn random_in_unit_sphere() -> DVec3 {
 
         return p;
     }    
+}
+
+pub fn random_unit_vector() -> DVec3 {
+    random_in_unit_sphere().normalize()
 }
