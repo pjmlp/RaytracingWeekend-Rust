@@ -1,7 +1,7 @@
 use std::rc::Rc;
 use glam::DVec3;
 
-use utils::{HitableList, Camera, random_double};
+use utils::{HitableList, Camera, Sphere, random_double, write_color, ray_color};
 
 fn main() {
     // Image
@@ -14,8 +14,8 @@ fn main() {
     // World
     let mut world = HitableList::new();
 
-    world.add(Rc::new(utils::Sphere::new(DVec3::new(0.0, 0.0, -1.0), 0.5)));
-    world.add(Rc::new(utils::Sphere::new(DVec3::new(0.0, -100.5, -1.0), 100.0)));
+    world.add(Rc::new(Sphere::new(DVec3::new(0.0, 0.0, -1.0), 0.5)));
+    world.add(Rc::new(Sphere::new(DVec3::new(0.0, -100.5, -1.0), 100.0)));
     
     // Camera
     let cam = Camera::new();
@@ -33,11 +33,11 @@ fn main() {
                 let u = (i as f64 + random_double()) / (IMAGE_WIDTH-1) as f64;
                 let v = (j as f64 + random_double()) / (IMAGE_HEIGHT-1) as f64;
                 let r = cam.get_ray(u, v);
-                pixel_color += utils::ray_color(r, &world, MAX_DEPTH);
+                pixel_color += ray_color(r, &world, MAX_DEPTH);
             }
 
 
-            utils::write_color(std::io::stdout(), pixel_color, SAMPLES_PER_PIXEL).expect("Failed ot write pixel");
+            write_color(std::io::stdout(), pixel_color, SAMPLES_PER_PIXEL).expect("Failed ot write pixel");
         }
     }
 
