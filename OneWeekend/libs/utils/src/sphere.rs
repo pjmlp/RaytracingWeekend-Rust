@@ -18,7 +18,7 @@ impl Sphere {
 
 /// Spheres are Hitable objects, so validate if the light rays hit them on scene
 impl Hitable for Sphere {
-    #[allow(unused_parens)]
+
     fn hit(&self, r: &Ray, t_min:f64, t_max:f64, rec : &mut HitRecord) -> bool {
         let oc = r.origin() - self.center;
         let a = r.direction().length_squared();
@@ -34,7 +34,7 @@ impl Hitable for Sphere {
         let mut root = (-half_b - sqrtd) / a;
         if root < t_min || t_max < root {
             root = (-half_b + sqrtd) / a;
-            if (root < t_min || t_max < root) {
+            if root < t_min || t_max < root {
                 return false
             }
         }
