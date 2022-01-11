@@ -11,8 +11,8 @@ pub struct Ray {
 impl Default for Ray {
     fn default() -> Ray {
         Ray {
-            dir: DVec3::new(0.0, 0.0,0.0),
-            orig: DVec3::new(0.0, 0.0,0.0)
+            dir: DVec3::ZERO,
+            orig: DVec3::ZERO
         }
     }
 }
