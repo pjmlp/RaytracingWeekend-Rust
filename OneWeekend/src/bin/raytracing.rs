@@ -1,9 +1,10 @@
 use std::rc::Rc;
+use std::io::Error;
 use glam::DVec3;
 
 use utils::{HitableList, Camera, Sphere, random_double, write_color, ray_color};
 
-fn main() {
+fn main() -> Result<(), Error> {
     // Image
     const ASPECT_RATIO : f32 = 16.0 / 9.0;
     const IMAGE_WIDTH : i32 = 400;
@@ -37,9 +38,10 @@ fn main() {
             }
 
 
-            write_color(std::io::stdout(), pixel_color, SAMPLES_PER_PIXEL).expect("Failed ot write pixel");
+            write_color(std::io::stdout(), pixel_color, SAMPLES_PER_PIXEL)?;
         }
     }
 
     eprintln!("\nDone");
+    Ok(())
 }
