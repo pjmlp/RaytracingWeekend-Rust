@@ -1,16 +1,19 @@
 use std::rc::Rc;
 use std::io::Error;
 use glam::DVec3;
+use image;
 
-use utils::{HitableList, Camera, Sphere, random_double, write_color, ray_color};
+use utils::{HitableList, Camera, Sphere, random_double, write_color_buffer, ray_color};
 
 fn main() -> Result<(), Error> {
     // Image
     const ASPECT_RATIO : f32 = 16.0 / 9.0;
-    const IMAGE_WIDTH : i32 = 400;
-    const IMAGE_HEIGHT : i32 = (IMAGE_WIDTH as f32 / ASPECT_RATIO) as i32;
+    const IMAGE_WIDTH : u32 = 400;
+    const IMAGE_HEIGHT : u32 = (IMAGE_WIDTH as f32 / ASPECT_RATIO) as u32;
     const SAMPLES_PER_PIXEL : i32 = 100;
     const MAX_DEPTH : i32 = 50;
+    
+    let mut buffer = [0; (IMAGE_WIDTH * IMAGE_HEIGHT * 3) as usize];
 
     // World
     let mut world = HitableList::new();
@@ -21,8 +24,8 @@ fn main() -> Result<(), Error> {
     // Camera
     let cam = Camera::new();
 
-    // Render
-    print!("P3\n{} {}\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
+    // Render   
+    let mut current = 0;
     
     for j in (0 .. IMAGE_HEIGHT).rev() {
         eprint!("\rScanlines remaining: {:3}", j);
@@ -36,11 +39,16 @@ fn main() -> Result<(), Error> {
                 let r = cam.get_ray(u, v);
                 pixel_color += ray_color(r, &world, MAX_DEPTH);
             }
-
-
-            write_color(std::io::stdout(), pixel_color, SAMPLES_PER_PIXEL)?;
+            
+            write_color_buffer(&mut buffer, current, pixel_color, SAMPLES_PER_PIXEL);
+            current += 3;
         }
     }
+    
+    
+    
+    // Save the buffer as "image.png"
+    image::save_buffer("image.png", &buffer, IMAGE_WIDTH, IMAGE_HEIGHT, image::ColorType::Rgb8).unwrap();
 
     eprintln!("\nDone");
     Ok(())

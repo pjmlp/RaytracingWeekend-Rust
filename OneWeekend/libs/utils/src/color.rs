@@ -23,3 +23,19 @@ pub fn write_color(out : Stdout, pixel_color : DVec3, samples_per_pixel:i32) -> 
 
     Ok(())
 }
+
+pub fn write_color_buffer(buffer : &mut [u8], index : usize, pixel_color : DVec3, samples_per_pixel:i32)  {
+    let mut r = pixel_color.x;
+    let mut g = pixel_color.y;
+    let mut b = pixel_color.z;
+
+    // Divide the color by the number of samples and gamma-correct for gamma=2.0.
+    let scale = 1.0 / (samples_per_pixel as f64);
+    r = (r * scale).sqrt();
+    g = (g * scale).sqrt();
+    b = (b * scale).sqrt();
+
+    buffer[index] = (256.0 * r.clamp(0.0, 0.999)) as u8;
+    buffer[index + 1] = (256.0 * g.clamp(0.0, 0.999)) as u8;
+    buffer[index + 2] = (256.0 * b.clamp(0.0, 0.999)) as u8;
+}
