@@ -13,3 +13,4 @@ path = "libs/utils"
 
 [dependencies]
 glam = "0.20.2"
+image = "0.23.14"
