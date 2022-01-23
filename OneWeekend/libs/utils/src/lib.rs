@@ -44,7 +44,7 @@ pub fn ray_color(r: Ray, world : &dyn Hitable, depth: i32) -> Color {
     }
 
     if world.hit(&r, 0.001, f64::INFINITY, &mut rec) {
-        let target = rec.p + rec.normal + random_unit_vector();
+        let target = rec.p + random_in_hemisphere(rec.normal);
         return 0.5 * ray_color(Ray::new(rec.p, target - rec.p), world, depth - 1);
     }
     
@@ -130,4 +130,13 @@ pub fn random_in_unit_sphere() -> DVec3 {
 
 pub fn random_unit_vector() -> DVec3 {
     random_in_unit_sphere().normalize()
+}
+
+pub fn random_in_hemisphere(normal : DVec3) -> DVec3 {
+    let in_unit_sphere = random_in_unit_sphere();
+    if in_unit_sphere.dot(normal) > 0.0 { // In the same hemisphere as the normal
+        in_unit_sphere
+    } else {
+        -in_unit_sphere
+    }
 }
