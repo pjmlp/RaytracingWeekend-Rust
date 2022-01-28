@@ -68,5 +68,5 @@ pub trait Hitable {
 
 /// What different kinds of materials need to implement
 pub trait Material {
-    fn scatter(&self, ray: &Ray, rec : &HitRecord, attenuation : Color, scattered : &mut Ray) -> bool;
+    fn scatter(&self, ray: &Ray, rec : &HitRecord, attenuation : &mut Color, scattered : &mut Ray) -> bool;
 }

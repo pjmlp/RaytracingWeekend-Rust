@@ -1,3 +1,4 @@
+use std::rc::Rc;
 use super::algebra::*;
 use super::hitable::*;
 use super::ray::*;
@@ -5,14 +6,15 @@ use super::ray::*;
 /// Sphere objects used in the scene
 pub struct Sphere {
     center : Point3,
-    radius : f64
+    radius : f64,
+    pub mat_ptr : Option<Rc<dyn Material>>,
 }
 
 
 impl Sphere {
     /// Creates a sphere located at the specific center with the given radius
-    pub fn new(cen : Point3, r:f64) -> Self {
-        Sphere{center:cen, radius:r}
+    pub fn new(cen : Point3, r:f64, m : Option<Rc<dyn Material>>) -> Self {
+        Sphere{center:cen, radius:r, mat_ptr: m}
     }
 }
 
@@ -44,6 +46,7 @@ impl Hitable for Sphere {
 
         let outward_normal = (rec.p - self.center) / self.radius;
         rec.set_face_normal(r, &outward_normal);
+        rec.mat_ptr = self.mat_ptr.clone();
 
         true
     }
