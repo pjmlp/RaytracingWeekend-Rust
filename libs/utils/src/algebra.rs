@@ -56,7 +56,8 @@ pub fn random_in_hemisphere(normal : DVec3) -> DVec3 {
 }
 
 pub fn near_zero(vect : &DVec3) -> bool {
-    vect.abs_diff_eq(DVec3::ZERO, 1e-8)
+    let s = 1e-8;
+    (vect.x.abs() < s) && (vect.y.abs() < s) && (vect.z.abs() < s)
 }
 
 pub fn reflect (v : DVec3, n: DVec3) -> DVec3 {

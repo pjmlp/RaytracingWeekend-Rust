@@ -43,7 +43,7 @@ pub fn ray_color(r: Ray, world : &dyn Hitable, depth: i32) -> Color {
 
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if depth <= 0 {
-        return Color::new(0.0, 0.0, 0.0);
+        return Color::ZERO;
     }
 
     if world.hit(&r, 0.001, f64::INFINITY, &mut rec) {

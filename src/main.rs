@@ -23,10 +23,10 @@ fn main() -> Result<(), Error> {
     let material_left = Rc::new(Metal::new(Color::new(0.8, 0.8, 0.8)));
     let material_right = Rc::new(Metal::new(Color::new(0.8, 0.6, 0.2)));
     
-    world.add(Rc::new(Sphere::new(DVec3::new( 0.0, -100.5, -1.0), 100.0, Some(material_ground.clone()))));
-    world.add(Rc::new(Sphere::new(DVec3::new( 0.0,    0.0, -1.0), 100.0, Some(material_center.clone()))));
-    world.add(Rc::new(Sphere::new(DVec3::new(-1.0,    0.0, -1.0), 100.0, Some(material_left.clone()))));
-    world.add(Rc::new(Sphere::new(DVec3::new( 1.0,    0.0, -1.0), 100.0, Some(material_right.clone()))));
+    world.add(Rc::new(Sphere::new(DVec3::new( 0.0, -100.5, -1.0), 100.0, Some(material_ground))));
+    world.add(Rc::new(Sphere::new(DVec3::new( 0.0,    0.0, -1.0),   0.5, Some(material_center))));
+    world.add(Rc::new(Sphere::new(DVec3::new(-1.0,    0.0, -1.0),   0.5, Some(material_left))));
+    world.add(Rc::new(Sphere::new(DVec3::new( 1.0,    0.0, -1.0),   0.5, Some(material_right))));
 
     // Camera
     let cam = Camera::new();
