@@ -20,8 +20,8 @@ fn main() -> Result<(), Error> {
 
     let material_ground = Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
     let material_center = Rc::new(Lambertian::new(Color::new(0.7, 0.3, 0.3)));
-    let material_left = Rc::new(Metal::new(Color::new(0.8, 0.8, 0.8)));
-    let material_right = Rc::new(Metal::new(Color::new(0.8, 0.6, 0.2)));
+    let material_left = Rc::new(Metal::new(Color::new(0.8, 0.8, 0.8), 0.3));
+    let material_right = Rc::new(Metal::new(Color::new(0.8, 0.6, 0.2), 1.0));
     
     world.add(Rc::new(Sphere::new(DVec3::new( 0.0, -100.5, -1.0), 100.0, Some(material_ground))));
     world.add(Rc::new(Sphere::new(DVec3::new( 0.0,    0.0, -1.0),   0.5, Some(material_center))));
