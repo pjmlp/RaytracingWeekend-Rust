@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = ["pjmlp <pjmlp@progtools.org>"]
 edition = "2021"
 
+[profile.release]
+lto = "thin"
+
 [workspace]
 
 [dependencies.utils]
