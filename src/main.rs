@@ -32,7 +32,7 @@ fn main() -> Result<(), Error> {
 
 
     // Camera
-    let cam = Camera::new(Point3::new(-2.0,2.0,1.0), Point3::new(0.0,0.0,-1.0), DVec3::new(0.0,1.0,0.0), 90.0, ASPECT_RATIO);
+    let cam = Camera::new(Point3::new(-2.0,2.0,1.0), Point3::new(0.0,0.0,-1.0), DVec3::new(0.0,1.0,0.0), 20.0, ASPECT_RATIO);
 
     // Render   
     let mut current = 0;
