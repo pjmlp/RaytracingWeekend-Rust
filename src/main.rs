@@ -1,43 +1,29 @@
-use std::rc::Rc;
 use std::io::Error;
 use glam::DVec3;
 use image;
 
-use utils::{HitableList, Camera, Sphere, Lambertian, Metal, Dielectric, Color, Point3, random_double, write_color_buffer, ray_color};
+use utils::{Camera, Point3, random_scene, random_double, write_color_buffer, ray_color};
 
 fn main() -> Result<(), Error> {
     // Image
-    const ASPECT_RATIO : f64 = 16.0 / 9.0;
-    const IMAGE_WIDTH : u32 = 400;
+    const ASPECT_RATIO : f64 = 3.0 / 2.0;
+    const IMAGE_WIDTH : u32 = 1200;
     const IMAGE_HEIGHT : u32 = (IMAGE_WIDTH as f64 / ASPECT_RATIO) as u32;
-    const SAMPLES_PER_PIXEL : i32 = 100;
+    const SAMPLES_PER_PIXEL : i32 = 500;
     const MAX_DEPTH : i32 = 50;
     
     let mut buffer = [0; (IMAGE_WIDTH * IMAGE_HEIGHT * 3) as usize];
 
     // World
-    let mut world = HitableList::new();
-
-    let material_ground = Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
-    let material_center = Rc::new(Lambertian::new(Color::new(0.1, 0.2, 0.5)));
-    let material_left = Rc::new(Dielectric::new(1.5));
-    let material_right = Rc::new(Metal::new(Color::new(0.8, 0.6, 0.2), 1.0));
-    
-    world.add(Rc::new(Sphere::new(DVec3::new( 0.0, -100.5, -1.0), 100.0, Some(material_ground))));
-    world.add(Rc::new(Sphere::new(DVec3::new( 0.0,    0.0, -1.0),   0.5, Some(material_center))));
-    world.add(Rc::new(Sphere::new(DVec3::new(-1.0,    0.0, -1.0),   0.5, Some(material_left.clone()))));
-    world.add(Rc::new(Sphere::new(DVec3::new(-1.0,    0.0, -1.0),  -0.4, Some(material_left))));
-    world.add(Rc::new(Sphere::new(DVec3::new( 1.0,    0.0, -1.0),   0.5, Some(material_right))));
-
-
+    let world = random_scene();
 
     // Camera
-    let  lookfrom = Point3::new(3.0, 3.0, 2.0);
-    let  lookat = Point3::new(0.0, 0.0, -1.0);
+    let  lookfrom = Point3::new(13.0, 2.0, 3.0);
+    let  lookat = Point3::new(0.0, 0.0, 0.0);
     let  vup = DVec3::new(0.0, 1.0, 0.0);
     
-    let dist_to_focus = (lookfrom-lookat).length();
-    let aperture = 2.0;
+    let dist_to_focus = 10.0;
+    let aperture = 0.1;
     
     let cam = Camera::new(lookfrom, lookat, vup, 20.0, ASPECT_RATIO, aperture, dist_to_focus);    
 
