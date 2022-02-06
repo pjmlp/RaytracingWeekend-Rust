@@ -1,5 +1,6 @@
 use std::rc::Rc;
 use std::io::Error;
+use std::f64::consts::PI;
 use glam::DVec3;
 use image;
 
@@ -7,30 +8,26 @@ use utils::{HitableList, Camera, Sphere, Lambertian, Metal, Dielectric, Color, r
 
 fn main() -> Result<(), Error> {
     // Image
-    const ASPECT_RATIO : f32 = 16.0 / 9.0;
+    const ASPECT_RATIO : f64 = 16.0 / 9.0;
     const IMAGE_WIDTH : u32 = 400;
-    const IMAGE_HEIGHT : u32 = (IMAGE_WIDTH as f32 / ASPECT_RATIO) as u32;
+    const IMAGE_HEIGHT : u32 = (IMAGE_WIDTH as f64 / ASPECT_RATIO) as u32;
     const SAMPLES_PER_PIXEL : i32 = 100;
     const MAX_DEPTH : i32 = 50;
     
     let mut buffer = [0; (IMAGE_WIDTH * IMAGE_HEIGHT * 3) as usize];
 
     // World
+    let R = (PI / 4.0).cos();
     let mut world = HitableList::new();
 
-    let material_ground = Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
-    let material_center = Rc::new(Lambertian::new(Color::new(0.1, 0.2, 0.5)));
-    let material_left = Rc::new(Dielectric::new(1.5));
-    let material_right = Rc::new(Metal::new(Color::new(0.8, 0.6, 0.2), 1.0));
-    
-    world.add(Rc::new(Sphere::new(DVec3::new( 0.0, -100.5, -1.0), 100.0, Some(material_ground))));
-    world.add(Rc::new(Sphere::new(DVec3::new( 0.0,    0.0, -1.0),   0.5, Some(material_center))));
-    world.add(Rc::new(Sphere::new(DVec3::new(-1.0,    0.0, -1.0),   0.5, Some(material_left.clone()))));
-    world.add(Rc::new(Sphere::new(DVec3::new(-1.0,    0.0, -1.0),  -0.4, Some(material_left))));
-    world.add(Rc::new(Sphere::new(DVec3::new( 1.0,    0.0, -1.0),   0.5, Some(material_right))));
+    let material_left = Rc::new(Lambertian::new(Color::new(0.0, 0.0, 1.0)));
+    let material_right = Rc::new(Lambertian::new(Color::new(1.0, 0.0, 0.0)));
+
+    world.add(Rc::new(Sphere::new(DVec3::new(-R,    0.0, -1.0),  R, Some(material_left))));
+    world.add(Rc::new(Sphere::new(DVec3::new( R,    0.0, -1.0),  R, Some(material_right))));
 
     // Camera
-    let cam = Camera::new();
+    let cam = Camera::new(90.0, ASPECT_RATIO);
 
     // Render   
     let mut current = 0;
