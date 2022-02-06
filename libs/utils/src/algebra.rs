@@ -42,6 +42,18 @@ pub fn random_in_unit_sphere() -> DVec3 {
     }    
 }
 
+pub fn random_in_unit_disk() -> DVec3 {
+    // Returns a random vector in [0,1).
+    loop {
+        let p = DVec3::new(random_double_with(-1.0, 1.0), random_double_with(-1.0, 1.0), 0.0);
+        if p.length_squared() >= 1.0 {
+            continue;
+        }
+
+        return p;
+    }    
+}
+
 pub fn random_unit_vector() -> DVec3 {
     random_in_unit_sphere().normalize()
 }

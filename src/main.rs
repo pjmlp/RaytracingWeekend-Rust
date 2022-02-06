@@ -32,7 +32,14 @@ fn main() -> Result<(), Error> {
 
 
     // Camera
-    let cam = Camera::new(Point3::new(-2.0,2.0,1.0), Point3::new(0.0,0.0,-1.0), DVec3::new(0.0,1.0,0.0), 20.0, ASPECT_RATIO);
+    let  lookfrom = Point3::new(3.0, 3.0, 2.0);
+    let  lookat = Point3::new(0.0, 0.0, -1.0);
+    let  vup = DVec3::new(0.0, 1.0, 0.0);
+    
+    let dist_to_focus = (lookfrom-lookat).length();
+    let aperture = 2.0;
+    
+    let cam = Camera::new(lookfrom, lookat, vup, 20.0, ASPECT_RATIO, aperture, dist_to_focus);    
 
     // Render   
     let mut current = 0;
