@@ -12,7 +12,7 @@ fn main() -> Result<(), Error> {
     const SAMPLES_PER_PIXEL : i32 = 500;
     const MAX_DEPTH : i32 = 50;
     
-    let mut buffer = Vec::with_capacity((IMAGE_WIDTH * IMAGE_HEIGHT * 3) as usize);
+    let mut buffer = vec![0; (IMAGE_WIDTH * IMAGE_HEIGHT * 3) as usize];
 
     // World
     let world = random_scene();
