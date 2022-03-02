@@ -2,6 +2,8 @@ use std::io::Error;
 use glam::DVec3;
 use image;
 
+mod utils;
+
 use utils::{Camera, Point3, random_scene, random_double, write_color_buffer, ray_color};
 
 fn main() -> Result<(), Error> {

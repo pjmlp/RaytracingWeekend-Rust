@@ -7,13 +7,9 @@ edition = "2021"
 [profile.release]
 lto = "thin"
 
-[workspace]
-
-[dependencies.utils]
-path = "libs/utils"
-
 # External dependencies
 
 [dependencies]
 glam = "0.20.2"
 image = "0.23.14"
+rand = "0.8.4"
