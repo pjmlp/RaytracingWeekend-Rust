@@ -2,6 +2,7 @@ use glam::DVec3;
 use std::io::{Stdout, Write};
 use std::io::Error;
 
+#[allow(dead_code)]
 pub fn write_color(out : Stdout, pixel_color : DVec3, samples_per_pixel:i32) -> Result<(), Error>  {
     let mut r = pixel_color.x;
     let mut g = pixel_color.y;

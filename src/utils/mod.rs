@@ -26,7 +26,7 @@ mod scene;
 pub use scene::*;
 
 // remaining crate code
-
+#[allow(dead_code)]
 pub fn hit_sphere(center : DVec3, radius: f64, r : &Ray) -> f64 {
     let oc = r.origin() - center;
     let a = r.direction().dot(r.direction());

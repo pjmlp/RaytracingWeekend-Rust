@@ -75,11 +75,11 @@ pub struct HitableList {
     objects : Vec<Rc<dyn Hitable>>
 }
 
+#[allow(dead_code)]
 impl HitableList {
     pub fn new() -> Self {
         HitableList { objects: Vec::new() }
     }
-
 
     pub fn copy_from(other:Vec<Rc<dyn Hitable>>) -> Self {
         HitableList { objects: other }
